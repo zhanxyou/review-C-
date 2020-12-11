@@ -702,7 +702,7 @@
 //fputs
 //int fputs(const char *s, FILE *stream)
 //arg1: string
-//arg2: stdout 标准输出，屏幕
+//arg2: 文件指针，如果把string输出到屏幕，固定写为stdout
 //return: positive int for success, negative for fail
 //#include<string.h>
 //#include<stdlib.h>
@@ -835,7 +835,7 @@
 //		----------
 //		|00000000|	0133F701	1个字节
 //		----------
-//  (a=10)|00001010|  0133F700	1个字节
+// (a=10)|00001010|  0133F700	1个字节
 //		----------
 //	*/
 //
@@ -880,21 +880,571 @@
 //*p, p 所对应的存储空间是一个 无效的访问区域
 
 //万能指针或泛指针
-#include "Header.h" //#include files....
-int main(void)
-{
-    int a = 345;
-    void* p;   //未指定类型
-    p = &a;
-    printf("%d", *((int*)p)); //把(p地址)强转成int*类型
+//#include "Header.h" //#include files....
+//int main(void)
+//{
+//    int a = 345;
+//    void* p;   //未指定类型
+//    p = &a;
+//    printf("%d", *((int*)p)); //把(p地址)强转成int*类型
+//
+//    char ch = 'a';
+//    void* p1;
+//    p1 = &ch;
+//    printf("%c", *(char*)p1);
+//
+//	return 0;
+//}
 
-    char ch = 'a';
-    void* p1;
-    p1 = &ch;
-    printf("%c", *(char*)p1);
+//修饰变量
+//#include "Header.h"
+//int main(void)
+//{
+//    /*const int a = 20;
+//    int* p= &a;
+//    *p = 650;
+//    printf("%d", a);*/
+//
+//    //修饰指针
+//
+//    //const int *p
+//    //int a = 10;
+//    //int b = 30;
+//    //const int* p = &a;
+//    //*p = 500;  //不可以修改*p
+//    //p = &b;    //可以修改p
+//
+//    //int const*p
+//    //int a = 10;
+//    //int b = 30;
+//    //int const *p = &a;
+//    //*p = 300;   //不可以修改*p
+//    //p = &b;     //可以修改p
+//
+//    //int* const p
+//    //int a = 10;
+//    //int b = 30;
+//    //int* const p = &a;
+//    //*p = 300;   //可以修改*p
+//    //p = &b;     //不可以修改p
+//
+//    //const int* const p
+//    //int a = 10;
+//    //int b = 30;
+//    //const int* const p = &a;
+//    //*p = 300;    //不可以修改*p
+//    //p = &b;     //不可以修改p
+//
+//    //总结：const向右修饰，被修饰的部分即为只读
 
-	return 0;
-}
+//    //取数组元素：
+//    //int arr[] = { 1,3, 5, 7, 8 };
+//    //int* p = arr;
+//
+//    //arr[i] == *(arr + 0) == p[0] == *(p + 0)
+//
+//    //指针和数组区别：
+//
+//    //1. 指针是变量。数组名为常量。
+//    //2. sizeof(指针) ---> 4字节(windows)/8字节(linux)
+//    //sizeof(数组) ---> 数组的实际字节数。
+//
+//	return 0;
+//}
+
+//数据类型对指针的作用
+//#include "Header.h"
+//int main(void)
+//{						//16进制数对应(4位二进制数) 因为 (2^4)
+//						//8进制数对应(3位二进制数)	因为 (2^3)
+//    int a = 0x12345678; //int 4bytes = 32bit | 4bit/per | '12' = 1 bytes
+//	/*	----------                 
+//		|   12   |	高	1个字节		
+//		----------
+//		|   34   |		1个字节
+//		----------
+//		|   56   |		1个字节
+//		----------
+//		|   78   |  低	1个字节
+//		----------
+//	*/
+//	// 所有p都指向统一地址&a
+//    char* p = &a; //0x00000078  == 1 bytes
+//    short* p = &a;//0x00005678	== 2 bytes
+//    int* p = &a;  //0x12345678  == 4 bytes
+//	//作用：决定了指针存储的地址开始，向后读取的字节数 (与指针本身存储空间无关)
+//	//short*p p-->0x00ff01 p+1 --> 0x00ff03 (short 2bytes)
+//
+//	//p++,p+1,p+=1 的不同 p = 0xff01
+//	//p++ == p+=1 --> p 变量地址 变了 0xff02
+//	//p+1 --> p 变量地址没变 0xff01
+//
+//	//****************数组名取地址*********************
+//	//int a[10] = {1,2,3,4,5,6,7,8,9,0};
+//	// a --> 0xff00
+//	// &a[0] --> 0xff00
+//	// a+1 --> 0xff04
+//	// &a --> 0xff00
+//	//int*p; p+1
+//	// &a+1 --> &a(整个数组) + 1(sizeof(int)*10: 一整个数组大小)
+//
+//	//指针加减指针
+//	//p + q error!!
+//	//p - q 偏移的元素个数 
+//
+//
+//	return 0;
+//}
+
+////指针数组1
+//#include "Header.h"
+//int main(void)
+//{
+//    int a = 10;
+//    int b = 20;
+//    int c = 30;
+//
+//    int* p1 = &a;
+//    int* p2 = &b;
+//    int* p3 = &c;
+//
+//    int* arr[] = { p1,p2,p3 };
+//    printf("%d", *arr[0]);  //*(*(arr+0)) == *(*arr) == **arr
+//    printf("%d", **arr);    //二级指针
+//
+//	return 0;
+//}
+//
+////指针数组2
+//#include "Header.h"
+//int main(void)
+//{
+//    int a[] = {10};
+//    int b[] = {20};
+//    int c[] = {30};
+//
+//    int* arr[] = { a,b,c };
+//    //arr[0][0] == *(*(arr+0)+0) //二维数组也是2级指针
+//
+//    printf("%d", *arr[0]);  //*(*(arr+0)) == *(*arr) == **arr
+//    printf("%d", **arr);    //二级指针
+//
+//    return 0;
+//}
+
+////多级指针
+//#include "Header.h"
+//int main(void)
+//{
+//    int a = 10;
+//    int* p = &a;    //1级指针是 变量地址
+//    int** pp = &p;  //2级指针是 1级指针的地址
+//    int*** ppp = &pp; //3级指针是 2级指针的地址
+//    //.....etc
+//    /*
+//        p = 0xff00 = &a
+//        *p = 10 = a
+//         
+//        pp = &p 
+//        *pp = p = 0xff00 = &a
+//        **pp = 10 = a
+//        
+//        ppp = &pp
+//        *ppp = pp = &p
+//        **ppp = *pp = p = 0xff00 = &a
+//        ***ppp = **pp = *p = 10 = a
+//         
+//        *********************************
+//        int a[] = {10};
+//        int b[] = {20};
+//        int c[] = {30};
+//
+//        int * arr[] = {a,b,c}
+//        //arr[0] = a 
+//        //arr[0][0] = 10
+//        *********************************
+//        int a = 10;
+//        int b = 20;
+//        int c = 30;
+//         
+//        int *p1 = &a;
+//        int *p2 = &b;
+//        int *p3 = &c;
+//
+//        int * arr[] = {p1,p2,p3};
+//        arr[0][0] = *(*(arr+0)+0) = *(*arr)
+//        ***********************************
+//
+//     */
+//    return 0;
+//}
+
+//传值和传址
+//#include "Header.h"
+//int swap(int a, int b) {
+//    int temp = 0;
+//    temp = a;
+//    a = b; 
+//    b = temp;
+//    return 0;
+//
+//}
+//int swap2(int* a, int* b) {
+//    int temp = 0;
+//    temp = *a;
+//    *a = *b;
+//    *b = temp;
+//    return 0;
+//}
+//
+//int main(void)
+//{
+//    int m = 1;
+//    int n = 2;
+//    //-----------传值------------//
+//    printf("before: %d and %d", m, n);
+//    swap(m, n);         //赋值给a,b: a = m, b =n, 但m,n的没变
+//    printf("after: %d and %d", m, n);  
+//    //-----------传址-----------//
+//    printf("before: %d and %d", m, n);
+//    swap(&m, &n);       //m,n内部地址变了，值 自然也就变了
+//    printf("after: %d and %d", m, n);
+//	return 0;
+//}
+
+//数组做函数参数
+//void BubbleSort(int arr[10]) == void BubbleSort(int arr[]) == void BubbleSort(int* arr)
+//sizeof(arr) == 4 because 指针大小为4
+
+//#include "Header.h"
+//void BubbleSort(int arr[]) { //int arr[] == int *arr;
+//    printf("%d", sizeof(arr)); //4 
+//}
+//
+//int main(void)
+//{
+//    int arr[] = { 1,2,3,4 };
+//    printf("%d", sizeof(arr)); //16, 不同于 void BubbleSort(int arr[]); sizeof(arr) = 4
+//	return 0;
+//}  //传递不再是整个数组，而是数组的首地址（一个指针）。
 
 
+//指针做函数返回值
+//#include "Header.h"
+//int m = 100; //global variable 全局变量
+//int* test(int a, int b) {
+//    
+//    int p = 1234; //局部变量
+//    //return &p; 无法返回，函数执行完后，所属栈帧会被释放。
+//    return &m;
+//}
+//
+//int main(void)
+//{
+//    int* p = NULL;
+//    p = test(10, 20);
+//    printf("%d", *p);
+//	return 0;
+//}
 
+//指针和string
+//char str1[] = { 'h', 'i', '\0' };	//变量，可读可写
+//char str2[] = "hi";				//变量，可读可写
+//char* str3 = "hi";				//常量，只读
+//str3 变量中，存储的是字符串常量“hi”中首个字符 ‘h’ 的地址值。
+//str3[1] = 'H';	// 错误！！
+//char* str4 = { 'h', 'i', '\0' };  // 错误！！！
+
+//string 比较
+//#include "Header.h"
+//
+//int stringCmp(char* str1, char* str2) {
+//    int i = 0;
+//
+//    while (str1[i] == str2[i]) {  //*(str1+i) == *(str2+i)
+//        if (str1[i] == '\0') {
+//            return 0;
+//        }
+//        i++;
+//    }
+//    return str1[i] > str2[i] ? 1 : -1;
+//
+//}
+//
+//int stringCmp2(char* str1, char* str2) {
+//
+//    while (*str1 == *str2) {
+//        if (*str1 == '\0') {
+//            return 0;
+//        }
+//        str1++;
+//        str2++;
+//    }
+//    return *str1 > *str2 ? 1 : -1;
+//
+//}
+//int main(void)
+//{
+//    char str1[] = "helloz";
+//    char str2[] = "hellow";
+//    // int ret = stringCmp(str1, str2);  //不比较长度, 最后比较 'z','w', 'z'>'w' 
+//    int ret1 = stringCmp2(str1, str2);  //指针比较
+//
+//    if (ret1 == 0) {
+//        printf("same");
+//    }else if(ret1 == 1) {
+//        printf("str1 > str2");
+//    }
+//    else if (ret1 == -1) {
+//        printf("str 1 < str2");
+//    }
+//    else {
+//        printf("error");
+//    }
+//	return 0;
+//}
+
+
+//string copy
+//#include "Header.h"
+//void myStringCopy(char* src, char* dest) { //数组版本
+//    int i = 0;
+//    while (src[i]!=0) 
+//    {
+//        dest[i] = src[i];
+//        i++;
+//    }
+//    dest[i] = '\0';
+//
+//}
+//void myStringCopy2(char* src, char* dest) { //指针版本
+//  
+//    while (*src!=0) 
+//    {
+//        *dest = *src;
+//        dest++;
+//        src++;
+//    }
+//    *dest = '\0';
+//
+//}
+//int main(void)
+//{
+//    char* src = "helllo";
+//    char dest[100] = { 0 };
+//
+//    myStringCopy2(src, dest);
+//    printf("%s", dest);
+//	return 0;
+//}
+
+//在字符串中查找字符 出现的位置
+#include "Header.h"
+//char* findChar(char* str, char a) {
+//
+//    while (*str)
+//    {
+//        if (*str == a) {
+//            return str;
+//        }
+//        str++;
+//    }
+//    
+//    return NULL;
+//
+//}
+//
+//char* findChar2(char* str, char a) {
+//    int i = 0;
+//    while (str[i])
+//    {
+//        if (str[i] == a) {
+//            
+//            return &str[i];
+//        }
+//        i++;
+//    }
+//    return NULL;
+//
+//}
+//int main(void)
+//{
+//    char* src = "hello world";
+//    char ch = ' ';
+//    char* find = NULL;
+//
+//    find = findChar2(src, ch);
+//    printf("%p", find);
+//
+//
+//	return 0;
+//}
+
+//string 去空格
+//#include "Header.h"
+//void str_no_space(char* src, char* dest) {
+//    int i = 0;
+//    int j = 0;
+//    while (src[i]) {
+//        
+//        if (src[i] != ' ') {
+//            dest[j] = src[i];
+//            j++;
+//        }
+//        i++;
+//    }
+//    dest[j] = '\0';
+//
+//}
+//void str_no_space2(char* src, char* dest) {
+//
+//    while (*src) {
+//
+//        if (*src!= ' ') {
+//            *dest = *src;
+//            dest++;
+//        }
+//        src++;
+//    }
+//    *dest = '\0';
+//
+//}
+//
+//int main(void)
+//{
+//    char src[] = "ni chou sha chou ni za di";
+//    char dest[100] = {0};
+//    str_no_space2(src, dest);
+//    printf("%s", dest);
+//	return 0;
+//}
+
+//strstr : 在 str中，找substr出现的位置
+//char* strstr(char*str,char*substr)
+//#include "Header.h"
+//int main(void)
+//{
+//    char* ret = strstr("hellollollo", "llo");
+//    printf("%s", ret); // llollollo 子串在原串中的位置(地址值), 没有的话返回NULL
+//	return 0;
+//}
+
+//strstr 子串(substr) 出现的次数
+//#include "Header.h"
+//int str_times(char* str, char* substr) {
+//    int count = 0;
+//    char* p = strstr(str, substr); //lloabcllozxyllo
+//    while (p) { // ==> p!= NULL
+//        count++;                //p += p + sizeof(substr) 有‘\0’ error!!
+//        p += strlen(substr);   // p = p + strlen(substr) --> abcllozxyllo
+//        p = strstr(p, substr);  //return: llozxyllo
+//    }
+//    return count;
+//}
+//int main(void)
+//{
+//    char str[] = "helloabcllozxyllo";
+//    char substr[] = "llo";
+//    int ret = str_times(str, substr);
+//
+//    printf("%d times", ret);
+//	return 0;
+//}
+
+
+//求非空字符串元素个数：
+//#include "Header.h"
+//int count_chars(char* str) {
+//    int count = 0;
+//    if (!str || strlen(str)==1) {
+//        return count;
+//    }
+//
+//    while (*str!=0) {
+//        if (*str != ' ') {
+//            count++;
+//        }
+//        str++;
+//    }
+//    return count;
+//}
+//int main(void)
+//{
+//    char* str = "  abcd btb   ";
+//    //char* str = " ";
+//    //char* str = NULL;
+//    int num = count_chars(str);
+//    printf("%d", num);
+//	return 0;
+//}
+
+
+//字符串逆置： str_inverse
+//char* str_inverse(char* str,char* temp) {
+//    int i = 0;
+//    str += (strlen(str)-1);
+//    while (*str) {
+//        *(temp+i) = *str;
+//
+//        str--;
+//        i++;
+//    }
+//
+//    return temp;
+//
+//}
+//int inverse(char* str) {
+//    if (!str)
+//        return -1;
+//
+//    //char* p = str;
+//    int start = 0;
+//    int end = strlen(str) - 1;
+//    char tmp;
+//    while (start < end) {
+//       tmp = str[start];
+//       str[start] = str[end];
+//       str[end] = tmp;
+//       start++;
+//       end--;
+//    }
+//
+//    return 0;
+//}
+//
+//#include "Header.h"
+//int main(void)
+//{
+//    char str[] = "hello";
+//    //char temp[100] = { 0 };
+//    //char* str2 = str_inverse(str,temp);
+//    int ret = inverse(str);
+//    printf("%s", str);
+//
+//	return 0;
+//}
+
+//判断字符串是回文：  level levvel  正反读一样
+//#include "Header.h"
+//int is_palindrome(char* str) {
+//    char* tmp = str;
+//    int begin = 0;
+//    int end = strlen(tmp)-1;
+//
+//    while (begin < end) {
+//       if (tmp[begin] != tmp[end]) {
+//                return -1;
+//       }
+//            begin++;
+//            end--;
+//    }
+//    return 1;
+//}
+//
+//int main(void)
+//{
+//    char str[] = "levvel";
+//    int ret = is_palindrome(str);
+//    printf("%d", ret);
+//	return 0;
+//}
