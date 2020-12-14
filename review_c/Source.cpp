@@ -1321,6 +1321,7 @@
 
 //strstr : 在 str中，找substr出现的位置
 //char* strstr(char*str,char*substr)
+//
 //#include "Header.h"
 //int main(void)
 //{
@@ -1393,7 +1394,7 @@
 //    return temp;
 //
 //}
-//int inverse(char* str) {
+//int inverse(char* str) {  数组版本
 //    if (!str)
 //        return -1;
 //
@@ -1405,6 +1406,24 @@
 //       tmp = str[start];
 //       str[start] = str[end];
 //       str[end] = tmp;
+//       start++;
+//       end--;
+//    }
+//
+//    return 0;
+//}
+//int inverse2(char* str) {   //指针版本
+//    if (!str)
+//        return -1;
+//
+//    //char* p = str;
+//    char*start = str;
+//    char*end =str+strlen(str) - 1;
+//    char tmp;
+//    while (start < end) {
+//       tmp = *start;
+//       *start = *end;
+//       *end= tmp;
 //       start++;
 //       end--;
 //    }
@@ -1428,11 +1447,11 @@
 //#include "Header.h"
 //int is_palindrome(char* str) {
 //    char* tmp = str;
-//    int begin = 0;
-//    int end = strlen(tmp)-1;
+//    int begin = 0;    //char*start = str;
+//    int end = strlen(tmp)-1;  //char*end = str+ strlen(str)-1;
 //
 //    while (begin < end) {
-//       if (tmp[begin] != tmp[end]) {
+//       if (tmp[begin] != tmp[end]) {  //*start != *end
 //                return -1;
 //       }
 //            begin++;
@@ -1448,3 +1467,874 @@
 //    printf("%d", ret);
 //	return 0;
 //}
+
+
+//字符串处理函数 #include<string.h>
+//strcopy 和  strncpy
+//#include "Header.h"
+//int main(void)
+//{
+//    //char src[] = "hello";
+//    //char dest[6];//需要足够大空间
+//    //strcpy(dest, src);  //char* strcpy(char* dest, const char* src)
+//    //printf("%s", dest);
+//
+//
+//    char src[] = "hello world";
+//    char dest[10] = {0};
+//
+//    char* p = strncpy(dest, src, 10); 
+//    //char* strncpy(char* dest, const char* src, size_t n)
+//    //n(与dest空间对应)> src: 只拷贝 src 大小
+//    //n(与dest空间对应)< src: 只拷贝 n 字节大小， 不添加‘\0’, 会有乱码
+//    printf("%s", p);
+//
+//	return 0;
+//}
+
+
+//strcat
+//#include "Header.h"
+//int main(void)
+//{
+//   /* char src[] = "world";
+//    char dest[] = "hello";  //dest 空间不够会出错，但结果没错
+//    char* p = strcat(dest, src);
+//    printf("%s\n", p);
+//    printf("%s\n", dest);*/
+//    //char* strcat(char* dest, const char* src)
+//
+//    char src[] = "world";
+//    char dest[] = "hello";  //dest 需要空间足够大 dest[11]不会报错
+//    char* p = strncat(dest, src, 3);
+//    printf("%s\n", p);
+//    printf("%s\n", dest);
+//    //char* strncat(char* dest, const char* src, size_t n)
+//	return 0;
+//}
+
+//strcmp and strncmp
+//#include "Header.h"
+//int main(void)
+//{
+//    char str1[] = "hello like";
+//    char str2[] = "hello mike";
+
+//    //int strcmp(const char* s1, const char*s2);
+//    //int num = strcmp(str1, str2); //-1 l<m
+//    //printf("%d", num);
+//
+//    //int strncmp(const char* s1, const char*s2, size_t n);
+//    int num2 = strncmp(str1, str2, 5);//0  o=o
+//    printf("%d", num2);
+//	return 0;
+//}
+
+//sprintf == printf --> string 
+//#include "Header.h"
+//int main(void)
+//{
+//	char dst[100] = { 0 };
+//	int a = 10;
+//	char src[] = "hello world";
+//	printf("a = %d, src = %s", a, src);
+//	printf("\n");
+//					//将输出的'"格式化string" 存到缓冲区(buffer) dst
+//	int len = sprintf(dst, "a = %d, src = %s", a, src);
+//	printf("dst = \"%s\"\n", dst);
+//	printf("len = %d\n", len); //实际格式化字符个数
+//	return 0;
+//}
+
+//sscanf == string --> scanf
+//#include "Header.h"
+//int main(void)
+//{
+//	//char src[] = "a=10, b=20";
+//	char src1[] = "10+20=30";
+//	int a;
+//	int b;								//原来scanf需要屏幕输入
+//	int c;								//现在直接从src解析写入&a,&b中
+//	//sscanf(src, "a=%d, b=%d", &a, &b);
+//	sscanf(src1, "%d+%d=%d", &a, &b, &c);
+//	printf("a:%d, b:%d, c:%d\n", a, b, c);
+//	return 0;
+//}
+
+//strchr 找在string中字符，子串的地址  左-->右
+//#include "Header.h"
+//int main(void)
+//{
+//	char src[] = "ddda123abcd";
+//	char* p = strchr(src, 'a');
+//	printf("p = %s\n", p); //a123abcd
+//	return 0;
+//}
+//strrchr 找在string中字符，子串的地址 右-->左
+//#include "Header.h"
+//int main(void)
+//{
+//	char src[] = "ddda123abcd";
+//	char* p = strrchr(src, 'a');
+//	printf("p = %s\n", p); //a123abcd
+//	return 0;
+//}
+
+//strstr 在str中找子串substring
+//#include "Header.h"
+//int main(void)
+//{
+//	char str[] = "hehehehabc123hohoh";
+//	printf("%s", strstr(str, "abc"));  //abc123hohoh
+//
+//	return 0;
+//}
+
+
+//strtok 字符串分割
+//return: 字符串拆分后的首地址。分割符用‘\0’替换  www.baidu.com --> www\0baidu.com
+//#include "Header.h"
+//int main(void)
+//{
+//	//char *a = "adc*fvcv.ebcy*hghbdfg$casdert";  常量不可用 必须可读可写
+//	char a[100] = "adc*fvcv.ebcy*hghbdfg$casdert";
+//	char* s = strtok(a, ".*$");//将"*"分割的子串取出     //第一次拆分，参1：原串
+//	//printf("%s\n", s);	//adc	// %s 遇到‘\0’就会停止
+//	while (s != NULL)	
+//	{
+//		printf("%s\n", s);
+//		s = strtok(NULL, ".*$");  //后面再拆分，参1：NULL(0)，原因是 strtok内部有静态变量 
+//								//在第一次拆分后，保存着“剩下的字符串”的地址
+//		//printf("%s\n", s);
+//	}
+//	return 0;
+//}
+
+//atoi, atof, atol
+//#include "Header.h"
+//int main(void)
+//{
+//	char str1[] = "          -10";  //错误使用--》 123zxy--> 123  abc345-->0
+//	int num1 = atoi(str1);    //int atoi(const char* p)
+//	printf("num1 = %d\n", num1);
+//
+//	char str2[] = "0.123";
+//	double num2 = atof(str2);
+//	printf("num2 = %.2lf\n", num2);
+//
+//	char str3[] = "123L";
+//	long num3 = atol(str3);
+//	printf("num3 = %ld\n", num3);
+//
+//
+//	return 0;
+//}
+
+
+//static 全局变量
+//#include "Header.h"   //***********************注意读这*********************/
+//extern int a;     //声明变量，如果其他.c文件有 (global) int a=10, 则可在这.c文件输出。
+//                  //如果是 static int a=10, 则被限制在其.c文件中。 没法在这里输出
+//int main(void)
+//{
+//    printf("%d", a);
+//	return 0;
+//}
+
+
+//static 局部变量   
+//#include "Header.h"
+//void foo() {
+//    int b = 10;
+//    printf("%d\n", b++);  
+//}
+//void foo2() {
+//    static int b2 = 20;     //只定义一次。相当于在“全局位置”定义一次。。多用于当计数器
+//    printf("%d\n", b2++);
+//}
+//int main(void)
+//{
+//    for (size_t i = 0; i < 10; i++)
+//    {
+//        foo();   //b=10,b=10,b=10.....因为 每次调用 函数会重新声明定义b。
+//    }
+//
+//    for (size_t i = 0; i < 10; i++)
+//    {
+//        foo2();   //b=10,b=11,b=12....
+//    }
+//
+//	return 0;
+//}
+
+
+//static函数 = static + 函数原型 + 函数体
+//只能在本文件内部使用
+//void foo(void);     //static void foo(void) 在str_func.c文件
+//
+//#include "Header.h"
+//int main(void)
+//{
+//    foo();
+//	return 0;
+//}
+
+//内存空间window
+//代码段： .text段。程序源代码二进制
+//数据段： 只读数据段 .rodata段。初始化数据段.data段。 初始化数据段.bss段
+//stack： 栈。在其之上开辟 栈帧。 windows: 1M----10M  linux: 8M---16M
+//heap： 堆。给用户定义数据提供空间。 约1.3G+
+/*
+    -----------------------
+    |  .text   |  数据段   |      .data段:初始化为非0的全局变量和静态变量
+    |  (binary)|   ------------> .bss段:初始化为0，未初始化的全局变量和静态变量
+    |          |          |             程序加载执行前，会将该段整体赋值为0
+    ----------------------       .rodata:只读数据段,常量
+    |   stack  |   heap   |
+    |     |    |     ----------> 空间足够大
+    |     |    |          |      
+    ------|----------------
+          |
+          V
+    比较小，系统自动管理，
+    自动分配，自动释放。
+    存储特性：FILO
+*/
+
+
+//内存空间linux
+/*	    ---------- 4G
+		|        |	---> 内核空间
+		---------- 3G
+		| stack ||	
+        |       V|
+		----------
+        |   C    |  ---> 标准库加载的位置
+        ----------
+        |       ^|       用户空间
+        |  heap ||
+        ----------  --------
+        | .bss   |
+        ----------  读写权限
+        | .data  |
+        ----------  --------
+        |.rodata |
+        ----------  只读
+		| .text  |  
+		---------- 0
+*/
+
+
+//生命周期：
+//
+//局部变量：从变量定义开始，函数调用完成。-- - 函数内部。
+//全局变量：程序启动开始，程序终止结束。-- - 程序执行期间。
+//static局部变量：程序启动开始，程序终止结束。-- - 程序执行期间。
+//static全局变量：程序启动开始，程序终止结束。-- - 程序执行期间。
+//全局函数：程序启动开始，程序终止结束。-- - 程序执行期间。
+//static函数：程序启动开始，程序终止结束。-- - 程序执行期间。
+
+//数组 默认在 栈stack上
+//现在需要申请 heap 空间，则需要malloc and free
+//void* malloc(size_t size); //申请size大小的空间，返回内存空间首地址
+                             //通常用来当数组用
+//void free(void* p); //释放放申请的空间
+           //mallocd返回的地址值
+
+//#include "Header.h"
+//int main(void)
+//{
+//    //int arr[1000000] //太大 无法执行  1m --- 10m
+//    //int arr[10] 空间大小 4 bytes + 10 = 40  ：这是在(栈)stack上
+//
+//    int * p = (int*)malloc(sizeof(int) * 10); // 40   ：这是在(堆)heap上
+//    //int* p = malloc(sizeof(int)*10) 隐式转换 void*-->int*
+//    if (p == NULL) {
+//        printf("error");
+//        return -1;
+//    }
+//*******************************************//
+//    char*tmp =p;
+//*******************************************//
+//    //写数据到malloc的空间
+//    for (size_t i = 0; i < 10; i++)
+//    {
+//        p[i] = i + 10;
+//    }
+//
+//    //读出malloc空间的数据
+//    for (size_t i = 0; i < 10; i++)
+//    {
+//        printf("%d", *(p+i));
+//    }
+
+//    //p++; 空间地址变了，则无法释放，error 
+
+//------------------------------------------------------//    
+//    for(size_t i = 0; i < 10; i++)
+//    {
+//          printf("%d", *p);
+//          p++; //会导致内存地址变化, 则需要一个临时变量 char*tmp= p; 
+//    }
+//    for(size_t i = 0; i < 10; i++)
+//    {
+//          printf("%d", *tmp);
+//          tmp++; 
+//    }
+//    free(tmp)
+//------------------------------------------------------//
+
+//    //释放申请内存
+//    free(p);  //free 完后不会立即失效，但数据变了。p不为空
+//    p=NULL;
+//    return 0;
+//}
+
+
+//int* p = malloc(200);
+//p = realloc(p, 400); //在p基础上， 将内存扩展到400个字节
+//p = realloc(p, 200);//在p基础上， 将内存缩小到200个字节
+//int* p1 = realloc(NULL, 100); //参1：NULL。作用跟malloc一样
+
+
+//2级指针heap空间
+#include "Header.h"
+//int main01(void)
+//{                                                                       //10个 4 bytes (int*)
+//    int** p = malloc(sizeof(int*) * 3);  //int **p  = int* p[10] --> [int*, int*, int*, ...]
+//    /*
+//    --------------------------------------
+//    |   int*   |    int*    |  int*      |
+//    |    |     |      |     |    |       |
+//    -----|------------|----------|--------
+//         |            |          |
+//         V            V          V
+//    p[0]----    p[1]----    p[2]----
+//        |  |        |  |        |  |
+//        ----        ----        ----
+//        |  |        |  |        |  |
+//        ----        ----        ----
+//p[0][2] |5 |        |  |        |  |
+//        ----        ----        ----
+//        |  |        |  |        |  |
+//        ----        ----        ----
+//        |  |        |  |        |  |
+//        ----        ----        ----
+//    */
+//    for (size_t i = 0; i < 3; i++)
+//    {
+//        p[i] = malloc(sizeof(int) * 5);
+//    }
+//
+//    //写
+//    for (size_t i = 0; i < 3; i++)
+//    {
+//        for (size_t j = 0; j < 5; j++)
+//        {
+//            p[i][j] = i + j;
+//        }
+//    }
+//    //读
+//    for (size_t i = 0; i < 3; i++)
+//    {
+//        for (size_t j = 0; j < 5; j++)
+//        {
+//            printf("%d ", *(*(p+i)+j) ); //p[i][j]
+//        }
+//        printf("\n");
+//    }
+//    //释放内层空间，再释放外层空间
+//    for (size_t i = 0; i < 3; i++)
+//    {
+//            free(*(p + i)); //p[i]
+//            p[i] = NULL;
+//    }
+//   
+//    //释放外层空间
+//    free(p);
+//    p = NULL;
+//
+//    return 0;
+//}
+
+//返回栈区地址
+//#include <stdio.h>
+//int* fun()
+//{
+//    int a = 10;
+//    return &a;//函数调用完毕，a释放
+//}
+//
+//int main(int argc, char* argv[])
+//{
+//    int* p = NULL;
+//    p = fun();
+//    *p = 100; //操作野指针指向的内存,err
+//
+//    return 0;
+//}
+
+
+
+//返回data区地址
+//#include <stdio.h>
+//
+//int* fun()
+//{
+//    static int a = 10;
+//    return &a; //函数调用完毕，a不释放
+//}
+//
+//int main(int argc, char* argv[])
+//{
+//    int* p = NULL;
+//    p = fun();
+//    *p = 100; //ok
+//    printf("*p = %d\n", *p);
+//
+//    return 0;
+//}
+
+//值传递1
+//#include <stdio.h>
+//#include <stdlib.h>
+//
+//void fun(int* tmp)
+//{
+//    tmp = (int*)malloc(sizeof(int));
+//    *tmp = 100;
+//}
+//
+//int main(int argc, char* argv[])
+//{
+//    int* p = NULL;
+//    fun(p); //值传递，形参修改不会影响实参
+//    printf("*p = %d\n", *p);//err，操作空指针指向的内存
+//
+//    return 0;
+//}
+
+
+//值传递2
+//#include <stdio.h>
+//#include <stdlib.h>
+//
+//void fun(int* tmp)
+//{
+//    *tmp = 100;
+//}
+//
+//int main(int argc, char* argv[])
+//{
+//    int* p = NULL;
+//    p = (int*)malloc(sizeof(int));
+//
+//    fun(p); //值传递
+//    printf("*p = %d\n", *p); //ok，*p为100
+//
+//    return 0;
+//}
+
+//memset
+//#include "Header.h"
+//int main(void)
+//{
+//    int a[10];
+//
+//    //memset(a, 0, sizeof(a));
+//    memset(a, 97, sizeof(a));  //a数组 ‘a’ 4*10
+//    int i = 0;
+//    for (i = 0; i < 10; i++)
+//    {
+//        printf("%c\n", a[i]);
+//    }
+//    return 0;
+//}
+
+//menmcpy()
+//#include "Header.h"
+//int main(void)
+//{
+//    int a[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//    int b[10];
+//
+//    memcpy(b, a, sizeof(a));  //dest, src, 4*10
+//    int i = 0;
+//    for (i = 0; i < 10; i++)
+//    {
+//        printf("%d, ", b[i]);
+//
+//    return 0;
+//}
+
+//memmove == memcpy 不过执行效率比mencpy低
+
+//int memcmp(const void *s1, const void *s2, size_t n);
+//比较s1和s2所指向内存区域的前n个字节
+#include "Header.h"
+//int main(void)
+//{
+//    int a[10] = { 1, 2, 11, 4, 5, 6, 7, 8, 9, 10};
+//    int b[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//
+//    int flag = memcmp(a, b, sizeof(a));  // =: 0, >: 1, <: -1
+//    int flag2 = memcmp(a, b, 8); // 3*int 前12个字节
+//    printf("flag = %d\n", flag);
+//    printf("flag2 = %d\n", flag2);
+//    return 0;
+//}
+
+//结构体
+//struct Student
+//{
+//    char name[20];
+//    int age;
+//};
+//#include "Header.h"
+//int main00(void)
+//{
+//    struct Student st;
+//    strcpy(st.name, "zhangsan");
+//    st.age = 18;
+//    struct Student st1 = {0};
+//    struct Student st2 = {"lisi"};
+//    struct Student st3 = { "wangwu", 40 };
+//    struct Student st4 = {.name = "liu", .age = 19};
+//
+//    return 0;
+//}
+
+//结构体对齐说明
+//struct A {
+//    int a;
+//    int b;   
+//};   //struct A a; sizeof(a) = 8 bytes
+//
+//struct A {
+//    char a;     //1 空3 == 1
+//    int b;      //4     == 4 以int对齐 
+//};   //struct A a; sizeof(a) = 8 bytes
+//
+//struct A {
+//    char a;
+//    short b;
+//    char d;
+//    int c;
+//};   //sizeof(a) = 12 bytes
+//
+//struct A {
+//    char a;
+//    char d;
+//    short b;
+//    int c;
+//};   //sizeof(a) = 8 bytes
+//struct A {
+//    char a;
+//    char d;
+//};   //sizeof(A) = 1 bytes ...因为类型相同
+//------------------------------------//
+//struct A {
+//    char a;
+//    //缺失的1个字节
+//    short b;
+//    int c;
+//    short d;
+//    char e;
+//};   //sizeof(a) = 12 bytes
+////可以通过指针变相访问，补足
+//#include "Header.h"
+//int main(void)
+//{
+//    struct A aa = { 0 };
+//  /*  char* s =(char*)&a;
+//    s[1] = 10;*/
+//    printf("%p", &aa); 
+//    return 0;
+//}
+//-------------------------------------//
+
+//struct A {
+//    unsigned char a : 2; //a只有2个bit大小 
+//    unsigned char b : 4; //b只有4个bit大小
+//    char c : 4;
+//};
+//
+//#include "Header.h"
+//int main(void)
+//{
+//    struct A a;
+//    a.a = 5;
+//    printf("%x", a.a); //1 --> _01  2bit够不到101
+//    a.b = 9;
+//    printf("%x", a.b); //9 --> 1001  4bit刚刚好
+//    a.c = 13;
+//    printf("%d", a.c); //-3 --> 1101  第一位是‘-’符号位，因为c是signed char
+//                                       //求原数 --> 1101取反 -->1010
+//                                        //--> +1 --> 1011 --> -3
+//    return 0;                         
+//}
+
+
+//struct Student {
+//    char name[64];   <---------------------可读可写
+//    int age;
+//    double salary;
+//}stu3 = {"trump1", 100, 3333.3};
+//
+//#include "Header.h"
+//int main(void)
+//{
+//    strcpy(stu3.name, "obama");
+//    printf("%s", stu3.name);
+//    return 0;
+//}
+
+
+#include "Header.h"
+//struct Student {
+//    char* name;    <----------------------只读
+//    int age;
+//    double salary;
+//}stu1[3] = { {"trump1", 100, 3333.3} ,{"trump2", 10, 333.3},{"trump3", 1, 33.3} };
+//int main(void)
+//{
+//    /*struct Student a;
+//    struct Student b;
+//    struct Student c;
+//
+//    struct Student* stu2[3] = {&a,&b,&c};
+//
+//    stu2[0]->name = malloc(sizeof(char) * 64);
+//    if (stu2[0]->name == NULL)
+//        return;
+//    strcpy(stu2[0]->name, "jedi");
+//
+//    printf("%s\n", stu2[0]->name);
+//
+//    free(stu2[0]->name);
+//    stu2[0]->name = NULL;*/
+//    //--------------------------------------------------------
+//    //int len = sizeof(stu1) / sizeof(stu1[0]);
+//    ////printf("%d",len);
+//
+//    //stu1[0].name = malloc(sizeof(char) * 64);
+//    //strcpy(stu1[0].name, "jedi");
+//
+//   
+//    //for (int i = 0; i < len; i++)
+//    //{
+//    //    printf("%s,%d,%.2lf\n", stu1[i].name, stu1[i].age, stu1[i].salary);
+//    //}
+//
+//    //free(stu1[0].name);
+//    //stu1[0].name = NULL;
+//    //--------------------------------------------------------
+//   /* struct Student stu = {NULL, 20, 9999.9};
+//    stu.name = (char*)malloc(sizeof(char) * 64);
+//    if (stu.name == NULL) {
+//        return;
+//    }
+//    strcpy(stu.name, "obama");
+//    printf("%s,%d,%.2lf", stu.name, stu.age, stu.salary);
+//    if (stu.name != NULL) {
+//        free(stu.name);
+//        stu.name = NULL;
+//    }*/
+//
+//    return 0;
+//}
+
+
+//结构体嵌套
+//struct Weapon{
+//    int dmg;
+//    int defense;
+//};
+//struct Hero {
+//    int dmg;
+//    int hp;
+//    int mp;
+//    struct Weapon dragon;
+//
+//    struct { //匿名结构体
+//        int bag;
+//        int accessories;
+//    }bag;
+//};
+
+
+//结构体指针使用
+//struct Person {
+//    char* name;
+//    int age;
+//    int salary;
+//}p1 = { NULL, 10 ,9999 }, * p2 = NULL; //p2 结构体指针(4 bytes)
+//#include "Header.h"
+//int main(void)
+//{
+// //------------------------------1----------------------------//
+//   /* p2 = &p1;
+//    p2->name = "jefi";
+//    p2->age = 10;
+//    p2->salary = 999;
+//    printf("%s %d %d", p2->name, p2->age, p2->salary);*/
+// //-------------------------------2--------------------------//
+//  /*  p2 = malloc(sizeof(struct Person));
+//    p2->name = malloc(sizeof(char) * 64); 
+//    strcpy(p2->name, "jedi");
+//    p2->age = 10;
+//    p2->salary = 999;
+//    printf("%s %d %d", p2->name, p2->age, p2->salary);
+//    free(p2->name);
+//    p2->name = NULL;*/
+//    return 0;
+//}
+
+
+//结构体作为参数
+//struct Person {
+//    char name[64];
+//    int age;
+//};
+//void print_person(struct Person p) {
+//    printf("%s %d", p.name, p.age);
+//}
+////地址（指针）传递 --可修改变量
+//void print_person_by_pointer(struct Person* p){
+//    printf("%s %d", p->name, p->age);
+//}
+////地址（指针）传递 --不可修改变量
+//void print_person_by_pointer2(const struct Person* p) {
+//    printf("%s %d", p->name, p->age);
+//}
+//
+//void test01() {
+//    struct Person person = { "obama", 33 };
+//    //person 和 p 没有任何关系， p修改不会导致person改变
+//    //将结构体68 字节数据拷贝给 p变量
+//    print_person(person);
+//    //传递效率不高
+//    //函数无法修改外部变量
+//    print_person_by_pointer(&person);
+//}
+//void test02() {
+//    //结构体指针
+//    struct Person* p_person = NULL;
+//    //结构体变量
+//    struct Person person = { "obama", 33 };
+//   //指针变量(栈区)  普通变量(栈区)
+//        p_person = &person;
+//    //指针可以指向 栈变量，堆变量，字符串常量
+//    //栈区 不需要free
+//}
+//void create_person(struct Person** p) { //p = &p_person // *p = &(null) = p_person
+//    struct Person* person = malloc(sizeof(struct Person));
+//    strcpy(person->name, "obama");
+//    person->age = 100;
+//    *p = person; //&(null) = person
+//}
+//
+//void test03() {
+//    struct Person* p_person = NULL;
+//    create_person(&p_person);   
+//    printf("%s %d", p_person->name, p_person->age);
+//}
+//#include "Header.h"
+//int main(void)
+//{
+//    test03();
+//    return 0;
+//}
+
+
+//结构体数组作参数
+//struct Person {
+//    char name[64];
+//    int age;
+//};
+//void print_person_array(struct Person ps[], int len) { //*ps
+//    for (int i = 0; i < len; i++)
+//    {
+//        printf("%s %d\n", ps[i].name, ps[i].age);
+//    }
+//}
+//
+//void test() {
+//    //定义 结构体数组
+//    struct Person persons[] = {
+//        {"obama",45},
+//        {"trump",70},
+//        {"polly",65}
+//    };
+//    print_person_array(persons, 3);
+//}
+//
+//#include "Header.h"
+////char** p; sizeof 4
+////char* p[3]; sizeof 12
+//int main(int argc, char*argv[]) //main函数的参数 是否能够省略 取决于编译器
+//{
+//    //printf("%d\n", argc);
+//    //for (int i = 0; i < argc; i++)
+//    //{
+//    //    printf("%s\n", argv[i]); // argv[i] 是 char*类型 char*类型是指向string
+//    //}
+//    test();
+//
+//    return 0;
+//}
+
+
+//union联合体
+union MyUnion
+{
+    int a;     //union 的数据成员共享内存
+    char d;  // a,d 地址一样的。如果都赋值，则d可能覆盖掉a
+};
+
+void test01() {
+    printf("Union size is: %d", sizeof(union MyUnion)); //4 以最大为准
+    union MyUnion n;
+    printf("%d %d\n", &n.a, &n.d);//a,b地址相同
+
+    n.d = 97;
+    printf("%d\n", n.d); //97
+    n.a = INT_MAX;
+    printf("%d\n", n.d); //-1
+
+}
+void test02() {
+    union MyUnion n1 = {100}; //初始化，只写一个值的话==默认给第一个成员赋值
+    printf("n1.a = %d", n1.a);
+
+    //C99的语法, 给指定成员初始化
+    union MyUnion n2 = { .d = 97};
+    printf("n2.d = %d", n2.d);
+}
+//int 4 bytes, 分别打印4个字节的值
+union MyNumber
+{
+    unsigned int number;
+    char byte[4];
+};
+void test03() {
+    union MyNumber number = { UINT_MAX };
+    //4 字节
+    //11111111 11111111 11111111 11111111
+    //10000000 10000000 10000000 10000000
+    //+1
+    //10000001 10000001 10000001 10000001
+    // -1         -1       -1       -1
+    //将数据通过字符数组的形式访问
+    printf("字节数值：%d 字节地址： %d", number.byte[0], &number.byte[0]);
+    printf("字节数值：%d 字节地址： %d", number.byte[1], &number.byte[1]);
+    printf("字节数值：%d 字节地址： %d", number.byte[2], &number.byte[2]);
+    printf("字节数值：%d 字节地址： %d", number.byte[3], &number.byte[3]);
+
+}
+#include "Header.h"
+int main(void)
+{
+    test01();
+    return 0;
+}

@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="str_func.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
