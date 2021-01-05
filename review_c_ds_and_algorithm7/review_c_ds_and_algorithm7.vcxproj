@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{88b6ee77-dd43-4510-9a70-151cf4781f45}</ProjectGuid>
-    <RootNamespace>reviewc</RootNamespace>
+    <ProjectGuid>{5fc4f616-b952-481e-8f37-c0a2db5fbb8b}</ProjectGuid>
+    <RootNamespace>reviewcdsandalgorithm7</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -141,19 +141,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="str_func.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="demo1.txt" />
-    <Text Include="demo2.txt" />
-    <Text Include="demo3.txt" />
-    <Text Include="demo5.txt" />
-    <Text Include="demo6.txt" />
-    <Text Include="demo7.txt" />
-    <Text Include="demo9.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

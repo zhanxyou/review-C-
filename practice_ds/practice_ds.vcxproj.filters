@@ -18,7 +18,16 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="str_func.cpp">
+    <ClCompile Include="Source1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="binaryTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,14 +35,5 @@
     <ClInclude Include="Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="demo1.txt" />
-    <Text Include="demo2.txt" />
-    <Text Include="demo3.txt" />
-    <Text Include="demo5.txt" />
-    <Text Include="demo6.txt" />
-    <Text Include="demo7.txt" />
-    <Text Include="demo9.txt" />
   </ItemGroup>
 </Project>

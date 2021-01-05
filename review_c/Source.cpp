@@ -2227,16 +2227,17 @@
 //    //指针可以指向 栈变量，堆变量，字符串常量
 //    //栈区 不需要free
 //}
-//void create_person(struct Person** p) { //p = &p_person // *p = &(null) = p_person
-//    struct Person* person = malloc(sizeof(struct Person));
+//void create_person(struct Person**p) { //**p = p_person //*p = &p_person
+//    struct Person* person = malloc(sizeof(struct Person)); //*person = [] //person = &[]
 //    strcpy(person->name, "obama");
 //    person->age = 100;
-//    *p = person; //&(null) = person
+//    *p = person; //*p = &p_person = person = &[]
+//
 //}
 //
 //void test03() {
-//    struct Person* p_person = NULL;
-//    create_person(&p_person);   
+//    struct Person* p_person = NULL;  //*person = null //person = &null
+//    create_person(&p_person);     
 //    printf("%s %d", p_person->name, p_person->age);
 //}
 //#include "Header.h"
@@ -2286,55 +2287,752 @@
 
 
 //union联合体
-union MyUnion
-{
-    int a;     //union 的数据成员共享内存
-    char d;  // a,d 地址一样的。如果都赋值，则d可能覆盖掉a
-};
+//union MyUnion
+//{
+//    int a;     //union 的数据成员共享内存
+//    char d;  // a,d 地址一样的。如果都赋值，则d可能覆盖掉a
+//};
+//
+//void test01() {
+//    printf("Union size is: %d", sizeof(union MyUnion)); //4 以最大为准
+//    union MyUnion n;
+//    printf("%d %d\n", &n.a, &n.d);//a,b地址相同
+//
+//    n.d = 97;
+//    printf("%d\n", n.d); //97
+//    n.a = INT_MAX;
+//    printf("%d\n", n.d); //-1
+//
+//}
+//void test02() {
+//    union MyUnion n1 = {100}; //初始化，只写一个值的话==默认给第一个成员赋值
+//    printf("n1.a = %d", n1.a);
+//
+//    //C99的语法, 给指定成员初始化
+//    union MyUnion n2 = { .d = 97};
+//    printf("n2.d = %d", n2.d);
+//}
+////int 4 bytes, 分别打印4个字节的值
+//union MyNumber
+//{
+//    unsigned int number;
+//    char byte[4];
+//};
+//void test03() {
+//    union MyNumber number = { UINT_MAX };
+//    //4 字节
+//    //11111111 11111111 11111111 11111111
+//    //10000000 10000000 10000000 10000000
+//    //+1
+//    //10000001 10000001 10000001 10000001
+//    // -1         -1       -1       -1
+//    //将数据通过字符数组的形式访问
+//    printf("字节数值：%d 字节地址： %d", number.byte[0], &number.byte[0]);
+//    printf("字节数值：%d 字节地址： %d", number.byte[1], &number.byte[1]);
+//    printf("字节数值：%d 字节地址： %d", number.byte[2], &number.byte[2]);
+//    printf("字节数值：%d 字节地址： %d", number.byte[3], &number.byte[3]);
+//
+//}
+//#include "Header.h"
+//int main(void)
+//{
+//    test01();
+//    return 0;
+//}
 
+
+//typedef
+//typedef int my_int_type;
+//typedef double my_double_type;
+//void test01() {
+//    int a = 10;
+//    my_int_type b = 10;
+//    my_double_type c = 3.14;
+//}
+//#if 0
+//struct Person {
+//    char name[64];
+//    int age;
+//};
+//typedef struct Person Myperson;
+//#else
+//typedef struct Person {
+//    char name[64];
+//    int age;
+//}MyPerson;
+//#endif
+//void test02() {
+//    MyPerson person = { "obama", 56 };
+//}
+//typedef long long LL;
+//void test03() {
+//    LL a = 10;
+//    LL b = 20;
+//}
+//#include "Header.h"
+//int main(void)
+//{
+//    
+//    return 0;
+//}
+
+
+//逗号运算符: 将多个表达式变成一个表达式
+//从左到右，左边的表达式执行完毕之后，右侧的表达式才会执行
+//逗号运算符 最后一个表达式的结果作为整个表达式的结果
+//void test01() {
+//    int a = (10, 20, 30);
+//    printf("%d", a);  //30
+//}
+//void test02() {
+//    int a = 10;
+//    int b = 20;
+//    int c = 30;
+//
+//    c = (a = b + 10, b = a + 10);
+//    printf("%d,%d,%d", a, b, c); //30 40 40
+//
+//}
+//void test03() {
+//    int a = 10;
+//    int b = 20;
+//    int c = 30;
+//    c = b + 10, b = a + 10;
+//    printf("%d,%d,%d", a, b, c); //10 20 30
+//
+//    c = (b + 10, b = a + 10);
+//    printf("%d,%d,%d", a, b, c); //10 20 20
+//
+//}
+//void test04() {
+//    int a = 10;
+//    //int b = (a++, a++, a++, a++);  最后一个a++，a作为整个表达式结果，先返回a 再++
+//    //printf("%d,%d", a, b); //14 13  
+//    int b = (++a, ++a, ++a, ++a);
+//    printf("%d,%d", a, b); //14 14
+//}
+//void test05() {
+//    for (int i = 0, j = 0; i < 10 && j<50; ++i, j += 10) {
+//        printf("i = %d, j = %d\n", i, j);
+//    }
+//}
+//#include "Header.h"
+//int main(void)
+//{
+//    test01();
+//    test02();
+//    return 0;
+//}
+
+
+//文件理解
+//相对路径 从盘符开始记录
+//绝对路径 相对于当前目录的一个路径
+
+//文本文件和2进制文件区别
+//打开文件分为两种方式: 文本模式，二进制模式打开
+//
+//文本模式：换行符
+//Mac : \r 作为换行符
+//Windows : \r\n 作为换行符
+//Linux : \n 作为换行符
+//程序中换行符 : \n 作为换行符
+//char s[] = "hello\n"; -> "hello\r";
+//char s[] = "hello\n"; -> "hello\r\n";
+//char s[] = "hello\n"; -> "hello\n";
+//使用文本模式打开一个文件时，C语言会进行相应的换行符转换
+//"hello\r" -> "hello\n"
+//"hello\r\n" -> "hello\n"
+//"hello\n" -> "hello\n"
+//
+//2进制文件读写不做任何转换
+//"hello\r" -> "hello\r"
+
+#if 0
+//文件打开关闭
 void test01() {
-    printf("Union size is: %d", sizeof(union MyUnion)); //4 以最大为准
-    union MyUnion n;
-    printf("%d %d\n", &n.a, &n.d);//a,b地址相同
+    // “r” 模式 以只读方式打开
+    //fopen("C:\\Users\\zhanx\\c文件\\review_c\\demo1.txt","r"); //只是在windows下的写法
+    //fopen("C:/Users/zhanx/c文件/review_c/demo1.txt", "r"); //通用写法，(推荐) //绝对路径
+    FILE* fp = fopen("./demo1.txt", "r"); //相对路径
+    if (fp == NULL) {               //返回的FILE指针。指向了一块内存。这块内存就存储了当前打开文件的信息
+        printf("open fail\n");      //FILE指针指向的空间是系统帮我们申请的
+        return;     //打开失败，返回null
+    }
 
-    n.d = 97;
-    printf("%d\n", n.d); //97
-    n.a = INT_MAX;
-    printf("%d\n", n.d); //-1
+    //关闭文件
+    //如果打开文件没有关闭，当程序关闭的时候，文件也会被关闭
+    //文件使用完毕，要及时释放. 否则在程序结束前一直占用内存
+    //1.fp 指向的内存就会被释放
+    //2. 刷新缓冲区。会将缓冲区中的文件内容写入到磁盘中
+    //3. 对于程序， 可打开的文件数量佑上限的
+    fclose(fp);
+    fp = NULL;
+}
+#endif
+
+#if 0
+//字符文件读写 fputc fgetc
+void test01(){
+    FILE* fp = fopen("./demo2.txt", "r");
+    if (fp == NULL) {             
+        printf("fail to open file\n");     
+        return;     
+    }
+#if 0
+    char c = fgetc(fp); //char c = 104
+    printf("%c %d", c, c);  // 'h' = 104 
+    //文本文件的结束符号就是-1
+#endif
+
+    /*char ch = fgetc(fp);
+    while (ch != -1) {
+        printf("%c", ch);
+        ch = fgetc(fp);
+    }*/
+    
+#if 0
+    char ch = 0;
+     //先执行fgetc --> ch --> 在判断
+    while ((ch = fgetc(fp)) != EOF) { // -1 == EOF == end of file
+        printf("%c", ch);
+    }
+#endif
+
+#if 0
+    char contents[128] = { 0 };
+    int index = 0;
+    while ((contents[index]= fgetc(fp)) != EOF) { // -1 == EOF == end of file
+        index++;
+    }
+    printf("%s\n", contents);
+#endif
+   
+    fclose(fp);
+    fp = NULL;
+
 
 }
 void test02() {
-    union MyUnion n1 = {100}; //初始化，只写一个值的话==默认给第一个成员赋值
-    printf("n1.a = %d", n1.a);
+    FILE* fp = fopen("./demo3.txt", "w");
+    if (fp == NULL) {
+        printf("fail to open!\n");
+        return;
+    }
 
-    //C99的语法, 给指定成员初始化
-    union MyUnion n2 = { .d = 97};
-    printf("n2.d = %d", n2.d);
+    char* s= "hello world";
+
+    for (int i = 0; i < strlen(s); ++i) {
+        fputc(s[i], fp);
+    }
+
+    fclose(fp);
+    fp = NULL;
+    printf("success to write!");
 }
-//int 4 bytes, 分别打印4个字节的值
-union MyNumber
+
+#include "Header.h"
+int main(void)
 {
-    unsigned int number;
-    char byte[4];
-};
+    test02();
+    return 0;
+}
+
+#endif
+//EOF and feof
+//feof 适用于文本文件，2进制文件 (先读在判断)
+//eof 适用于文本文件
+#if 0
+int main(){
+    FILE* fp = fopen("./demo2.txt", "r");
+    if (fp == NULL) {
+        printf("fail to open file\n");
+        return;
+    }
+#if 0
+    char ch = 0;
+    //"abc[-1]"
+    while (!feof(fp)) {  //feof: (false)返回0：未到结尾 ，(true)返回非0： 已经到结尾
+        //int f = feof(fp);
+        //printf("%d", f);
+        ch = fgetc(fp);
+        printf("%c %d\n", ch, ch);
+    }
+#endif
+
+#if 0
+    char ch = 0;
+    //"abc"
+    while (1) {
+        ch = fgetc(fp);
+        //int f = feof(fp);
+        //printf("%d", f);
+        if (feof(fp)) {
+            break;
+        }
+        printf("%c %d\n", ch, ch);
+    }
+#endif
+    return 0;
+}
+#endif
+
+
+//文件拷贝
+#if 0
+  //待拷贝文件：以读的方式打开
+  //目的地文件：以写的方式打开
+
+void test() {
+    char file_src[128] = { 0 };
+    char file_dst[128] = { 0 };
+    printf("input src_directory: "); // ./demo3.txt
+    scanf("%s", file_src);
+    printf("input dst_directory: "); // ./demo4.txt
+    scanf("%s", file_dst);
+
+    FILE* fp_read = fopen(file_src, "r");
+    if (fp_read == NULL) {
+        printf("%s error! \n", file_src);
+        return;
+    }
+    FILE* fp_write = fopen(file_dst, "w");
+    if (fp_write == NULL) {
+        fclose(fp_read);
+        fp_read = NULL;
+
+        printf("%s error!\n", file_dst);
+        return;
+    }
+
+    //copy
+    char ch = 0;
+    while ((ch = fgetc(fp_read))!= EOF)
+    {
+        fputc(ch, fp_write);
+    }
+    //close file
+    fclose(fp_read);
+    fp_read = NULL;
+
+    fclose(fp_write);
+    fp_write = NULL;
+
+    printf("%s copy fom %s: success \n", file_dst, file_src);
+    
+}
+#include "Header.h"
+int main(void)
+{
+    test();
+    return 0;
+}
+
+#endif
+
+
+//行文件读写
+//fgets
+//内容写入文件
+#if 0 
+void test01() {
+    FILE* fp = fopen("./demo5.txt", "w");
+    if (fp == NULL) {
+        return;
+    }
+#if 0
+    char* s = "hello world";
+    //从s字符第一个字符开始到 \0 之前的内容写入到文件中
+    fputs(s, fp);
+#endif
+    char* name[] = { "obama\n","trump\n","cliton\n", "bush\n", "polly\n", "smith\n" };
+    for (int i = 0; i < sizeof(name)/sizeof(name[0]); i++)
+    {
+        fputs(name[i], fp);
+    }
+   
+    fclose(fp);
+    fp = NULL;
+}
+#endif
+//文件读取
+#if 0 
+void test02() {
+    FILE* fp = fopen("./demo5.txt", "r");
+
+    if (fp == NULL) {
+        return;
+    }
+
+    while (1) {
+        //申请空间，用于存储文件
+        char line[128] = { 0 };
+        //从文件中一次读取一行
+        fgets(line, 128, fp);
+        //判断文件是否结束
+        
+        if (feof(fp)) {
+            break;
+        }
+        printf("%s", line);
+    
+    }
+    fclose(fp);
+    fp = NULL;
+}
+#endif
+
+#if 0
+//用于统计多少行
+int file_count() {
+    FILE* fp = fopen("./demo5.txt", "r");
+    if (fp == NULL) {
+        return 0;
+    }
+    
+    int count = 0;
+
+    while (1)
+    {
+        char line[128] = { 0 };
+        //读取每一行数据
+        fgets(line, 128, fp);
+
+        if (feof(fp)) {
+            break;
+        }
+        ++count;
+    }
+
+    fclose(fp);
+    fp = NULL;
+    
+    return count;
+}
 void test03() {
-    union MyNumber number = { UINT_MAX };
-    //4 字节
-    //11111111 11111111 11111111 11111111
-    //10000000 10000000 10000000 10000000
-    //+1
-    //10000001 10000001 10000001 10000001
-    // -1         -1       -1       -1
-    //将数据通过字符数组的形式访问
-    printf("字节数值：%d 字节地址： %d", number.byte[0], &number.byte[0]);
-    printf("字节数值：%d 字节地址： %d", number.byte[1], &number.byte[1]);
-    printf("字节数值：%d 字节地址： %d", number.byte[2], &number.byte[2]);
-    printf("字节数值：%d 字节地址： %d", number.byte[3], &number.byte[3]);
+    //获取文件行数
+    int line_cnt = file_count();
+    printf("line count = %d\n", line_cnt);
+    //根据文件行数开辟string指针数组
+
+    char** lines = malloc(sizeof(char*) * line_cnt);
+    //在从头按行读取文件内容， 根据内容长度开辟空间，并存储空间
+    FILE* fp = fopen("./demo5.txt", "r");
+    if (fp == NULL) {
+        return;
+    }
+    int idx = 0;
+    while (1) {
+        char content[128] = { 0 };
+        //读取每一行数据
+        fgets(content, 128, fp);
+
+        if (feof(fp)) {
+            break;
+        }
+        //计算当前字符串的长度
+        int len = strlen(content) + 1; // +1 == +'\0'
+        //给字符串指针开辟空间
+        lines[idx] = malloc(len);
+        //拷贝内容
+        strcpy(lines[idx], content);
+        //累加下标
+        ++idx;
+    
+    }
+
+    fclose(fp);
+    fp = NULL;
+    //打印文件内容
+    for (int i = 0; i < line_cnt; i++)
+    {
+        printf("%s", lines[i]);
+    }
+    //释放堆内存空间
+
+    for (int i = 0; i < line_cnt; i++)
+    {
+        free(lines[i]);
+        lines[i] = NULL;
+    }
+
+    free(lines);
+    lines = NULL;
+}
+
+
+#include "Header.h"
+int main(void)
+{
+    test03();
+    return 0;
+}
+
+#endif
+
+#if 0
+void test04() {
+    FILE* fp = fopen("./demo6.txt", "r");
+    if (fp == NULL) {
+        return;
+    }
+
+    //按行都内容 10+20
+    while (1)
+    {
+        char line[64] = { 0 };
+        fgets(line, 64, fp);
+
+        if (feof(fp)) {
+            break;
+        }
+        char* p= strchr(line, '+');  //找+号
+
+        char left[32] = { 0 };
+        strncpy(left, line, p - line); 
+        char right[32] = { 0 };
+        strcpy(right, p+1);
+
+        right[strlen(right) - 1] = '\0';
+        int l = atoi(left);
+        int r = atoi(right);
+
+        printf("%d+%d=%d\n", l, r, l + r);
+
+    }
+    
+
+    fclose(fp);
+    fp = NULL;
+}
+#include "Header.h"
+int main(void)
+{
+    test04();
+    return 0;
+}
+#endif
+
+
+//块读写
+#if 0
+struct Person {
+    char name[32];
+    int age;
+};
+void test01() {
+    //创建结构体变量
+    struct Person person = { "Obama", 50 };
+    //数据写入到文件中，都是2进制的
+    //变量在内存中都是以2进制的方式存储的
+    //将变量的在内存中的字节，一个一个的写到文件中
+    FILE* fp = fopen("./demo7.txt", "wb");
+    if (fp == NULL) {
+        return;
+    }
+                                      //往fp里面写
+    fwrite(&person,sizeof(struct Person), 1, fp);
+
+
+    fclose(fp);
+    fp = NULL;
+}
+void test02() {
+    FILE* fp = fopen("./demo7.txt", "rb");
+    if (fp == NULL) {
+        return;
+    }
+    //申请person大小的空间
+    struct Person p = {0};
+                                    //从fp里面读
+    fread(&p, sizeof(struct Person),1, fp);
+
+
+    fclose(fp);
+    fp = NULL;
+
+}
+
+void test03() {
+    //创建person数组，并且将数组存储到文件中
+    struct Person ps[] = {
+        {"obama", 99},
+        {"trump", 89},
+        {"clinton", 100}
+    };
+    FILE* fp = fopen("./demo8.txt", "wb");
+    if (fp == NULL) {
+        return;
+    }
+
+    fwrite(ps, sizeof(struct Person), 3, fp);
+
+
+    fclose(fp);
+    fp = NULL;
+
+}
+
+void test04() {
+    FILE* fp = fopen("./demo8.txt", "rb");
+    if (fp == NULL) {
+        return;
+    }
+
+    struct Person ps[3] = { 0 };
+    fread(ps, sizeof(struct Person), 3, fp);
+    for (int i = 0; i < 3; i++)
+    {
+        printf("%s %d\n", ps[i].name, ps[i].age);
+    }
+
+    fclose(fp);
+    fp = NULL;
 
 }
 #include "Header.h"
 int main(void)
 {
-    test01();
+    test04();
     return 0;
 }
+
+#endif
+
+//随机文件读写
+#if 0
+struct Person {
+    char name[32];
+    int age;
+};
+void test01() {
+    //创建person数组，并且将数组存储到文件中
+    struct Person ps[] = {
+        {"obama", 99},
+        {"trump", 89},
+        {"clinton", 100}
+    };
+    FILE* fp = fopen("./demo9.txt", "wb");
+    if (fp == NULL) {
+        return;
+    }
+
+    fwrite(ps, sizeof(struct Person), 3, fp);
+
+
+    fclose(fp);
+    fp = NULL;
+
+}
+void test02() {
+    FILE* fp = fopen("./demo8.txt", "rb");
+    if (fp == NULL) {
+        return;
+    }
+    //移动指针到第二个Person数据首地址
+    long pos = ftell(fp);
+    fseek(fp, sizeof(struct Person), SEEK_SET);//指向trump
+    //创建变量保存数据
+    struct Person ps= { 0 };
+                //偏移一个结构体变量字节(36)         
+    fread(&ps, sizeof(struct Person), 1, fp);
+    printf("%s %d\n", ps.name, ps.age); //读完后指向clinton
+    
+    fread(&ps, sizeof(struct Person), 1, fp); //读clinton
+    printf("%s %d\n", ps.name, ps.age);
+
+    int offset = sizeof(struct Person);//由于是无符号变量，需转换
+    fseek(fp, -offset, SEEK_CUR); //返回trump
+    fread(&ps, sizeof(struct Person), 1, fp); //读trump
+    printf("%s %d\n", ps.name, ps.age);
+
+    //fseek(fp, 0, SEEK_SET);//回到开始位置1
+    //frewind(fp);//回到开始位置2
+
+
+    fclose(fp);
+    fp = NULL;
+
+}
+void test03() {
+    //获取文件大小
+    FILE* fp = fopen("./demo8.txt", "rb");
+    if (fp == NULL) {
+        return;
+    }
+    //将文件指针移到文件末尾，就可以
+    fseek(fp, 0, SEEK_END);
+    long file_size = ftell(fp); //文件大小108字节
+    printf("%ld %u", file_size, sizeof(struct Person)); //108 36
+
+    fclose(fp);
+    fp = NULL;
+}
+#include "Header.h"
+int main(void)
+{
+    test02();
+    return 0;
+}
+
+#endif 
+
+#if 1
+int g_a = 100;
+ //1.堆区指针不能指向非堆区的内存
+ //2.堆指针在释放之前进制重新赋值
+ //3.堆内存释放之后仍然使用堆指针
+ //4.堆指针地址修改后无法在free
+ //5.malloc(0)时，不建议使用该空间
+
+ //1.堆区指针不能指向非堆区的内存
+void test01() {
+    //1.栈变量
+    int a = 10;
+    int* p = &a;
+    //free(p);//不能释放
+
+    //字符串常量
+    char* s = "hello world";
+    //free(s);//不能释放
+
+    //全局变量
+    int* gp = &g_a;
+   //free(gp); ////不能释放
+}
+//2.堆指针在释放之前进制重新赋于新空间
+void test02() {
+    int* p = (int*)malloc(sizeof(int));//重新赋值 这块内存会消失
+    *p = 100;
+    p = (int*)malloc(sizeof(int));
+}
+//3.堆内存释放之后仍然使用堆指针
+void test03() {
+    int* p = (int*)malloc(sizeof(int));
+    *p = 100;
+    free(p);
+    //内存回收，使用权已经不归我们了
+    //虽然没有报错，原则不能在使用了
+    *p = 200;
+    printf("*p = %d\n", *p);
+}
+//4.堆指针地址修改后无法在free
+void test04() {
+    int* p = (int*)malloc(sizeof(int)*10);
+    p = p + 1;
+    free(p); //free的时候一定要拿到空间首地址
+             //我们虽然申请了40个字节，但实际上，申请的内存大于40，可能是44
+             //多出来的4个字节用于存储堆空间大小
+}
+//5.malloc(0)时，不建议使用该空间
+void test05() {
+    int* p = malloc(0); //不是空指针
+    printf("%p", p);
+}
+#include "Header.h"
+int main(void)
+{
+
+    return 0;
+}
+#endif 
